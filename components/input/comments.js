@@ -1,5 +1,4 @@
 import { useState } from 'react';
-
 import CommentList from './comment-list';
 import NewComment from './new-comment';
 import classes from './comments.module.css';
@@ -13,8 +12,15 @@ function Comments(props) {
     setShowComments((prevStatus) => !prevStatus);
   }
 
-  function addCommentHandler(commentData) {
-    // send data to API
+  const addCommentHandler = async (commentData) => {
+    commentData.eventId = props.eventId;
+    fetch('/api/comment'), {
+      method: 'POST',
+      body: JSON.stringify(commentData),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
   }
 
   return (

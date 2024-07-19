@@ -17,7 +17,15 @@ function NewsletterRegistration() {
         'Content-Type': 'application/json',
       }
     })
+    if (!res.ok) {
+      const errordesc = await res.text();
+      console.log(errordesc)
+    }
+    else {
+      const data = await res.json();
+      console.log(data)
 
+    }
     // optional: validate input
     // send valid data to API
   };

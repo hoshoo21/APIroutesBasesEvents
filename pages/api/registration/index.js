@@ -9,9 +9,13 @@ export default async function handler(req, res) {
     switch (method) {
         case 'POST':
             try {
+                const fetchedEamil = req.body.email;
+                if (!fetchedEamil || !fetchedEamil.include('@')) {
+                    res.status(422).json({ 'message': 'email address is not valid' });
+                }
                 const userRegisterationMOdel = {
                     id: new Date().toISOString(),
-                    email: req.body.email,
+                    email: fetchedEamil,
                 };
                 const userRegisteration = new UserRegisteration(userRegisterationMOdel);
                 const savedUser = await userRegisteration.save();
