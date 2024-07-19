@@ -2,25 +2,28 @@ import connectDB from '../lib/db';
 import UserRegisteration from '../models/userRegisteration';
 export default async function handler(req, res) {
 
-    await connectDB();
+    const db = await connectDB();
 
     const { method } = req;
 
     switch (method) {
         case 'POST':
             try {
+                console.log(req.body)
                 const fetchedEamil = req.body.email;
-                if (!fetchedEamil || !fetchedEamil.include('@')) {
+                if (!fetchedEamil) {
                     res.status(422).json({ 'message': 'email address is not valid' });
                 }
                 const userRegisterationMOdel = {
                     id: new Date().toISOString(),
                     email: fetchedEamil,
                 };
-                const userRegisteration = new UserRegisteration(userRegisterationMOdel);
-                const savedUser = await userRegisteration.save();
+                const savedUser = db.collection("UserRegisteration").insertOne(userRegisterationMOdel);
+                //const userRegisteration = new UserRegisteration(userRegisterationMOdel);
+                //const savedUser = await userRegisteration.save();
                 res.status(201).json({ "usser": savedUser });
             } catch (error) {
+                console.log(error);
                 res.status(500).json({ message: 'Error creating user', error });
             }
             break;

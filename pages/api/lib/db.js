@@ -1,12 +1,14 @@
-const mongoose = require('mongoose');
+const { MongoClient } = require('mongodb');
 
 const connectDB = async () => {
     try {
-        await mongoose.connect("mongodb://localhost:27017/EventSystem", {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        });
+        const url = '';
+        //"mongodb://localhost:27017/EventSystem"
+        const client = new MongoClient(url);
+        await client.connect();
+        const db = client.db("EventSystem");
         console.log('MongoDB connected successfully');
+        return db;
     } catch (err) {
         console.error('MongoDB connection error:', err);
         process.exit(1); // Exit process with failure
