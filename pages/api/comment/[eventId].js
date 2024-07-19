@@ -1,12 +1,11 @@
 // pages/api/feedback.js
 import connectDB from '../lib/db';
-import Event from '../models/comment';
+import Comment from '../models/comment';
 
 export default async function handler(req, res) {
     await connectDB();
 
     const { method } = req;
-
     switch (method) {
         case 'POST':
             try {
@@ -18,27 +17,23 @@ export default async function handler(req, res) {
                     comment: req.body.comment,
                     date: new Date().toDateString(),
                 };
+                console.log(commentModel)
                 const comment = new Comment(commentModel);
                 const savedComment = await comment.save();
                 res.status(201).json({ "comment": savedComment });
             } catch (error) {
-                res.status(500).json({ message: 'Error creating feedback', error });
+                console.log(error);
+                res.status(500).json({ message: 'Error creating comment', error });
             }
             break;
 
         case 'GET':
             try {
-
+                console.log(req.query);
                 const { eventId } = req.query;
-                if (!id) {
-                    const comments = await Comment.find({ eventId: eventId });
-                    res.status(200).json({ "comments": comments });
-                }
-                else {
-                    res.status(200).json({ "message": "comments not found" });
-
-                }
-
+                const comments = await Comment.find({ eventId: eventId });
+                console.log(comments);
+                res.status(200).json({ "comments": comments });
             } catch (error) {
                 res.status(500).json({ message: 'Error retrieving event', error });
             }
